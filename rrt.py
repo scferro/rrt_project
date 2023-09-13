@@ -32,22 +32,16 @@ class RRT:
             try:
                 slope = (-point2[1]+point1[1])/(-point2[0]+point1[0])
             except ZeroDivisionError as e:
-                print(point1)
-                print(point2)
                 slope = 2**32
             try:
                 slopePerp = -(-point2[0]+point1[0])/(-point2[1]+point1[1])
             except ZeroDivisionError as e:
-                print(point1)
-                print(point2)
                 slopePerp = 2**32
             yInt = point2[1] - (slope * point2[0])
             yIntPerp = obs[1] - (slopePerp * obs[0])
             try:
                intersect = [(yIntPerp-yInt)/(slope-slopePerp)]
             except ZeroDivisionError as e:
-                print(slope)
-                print(slopePerp)
                 intersect = [2**32]
             intersect.append(slope * intersect[0] + yInt)
             distInt = math.dist([obs[0], obs[1]], intersect)  
@@ -60,7 +54,6 @@ class RRT:
             elif (distPoint1 <= obs[2]) or (distPoint2 <= obs[2]) :
                 goodPoint = False
                 break
-        print(goodPoint)
         return goodPoint
     
     def check_point(self, point, obsList):

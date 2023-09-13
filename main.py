@@ -7,7 +7,7 @@ xRange = [0, 200]
 yRange = [0, 200]
 delta = 1
 numVert = 1000
-numObs = 10
+numObs = random.randint(5, 10)
 minRadius = 15
 maxRadius = 30
 
@@ -51,10 +51,12 @@ while (counter < numVert) and (checkComplete == False):
     tree.add_point(newPoint)
     tree.add_link(closePoint, newPoint)
     checkComplete = rrt.obstacle_check(goal, newPoint, obsList)
+    counter+= 1
 
 #if goal is accessible, add link to goal
 if checkComplete == True:
     tree.add_link(newPoint, goal)
+    print("Task accomploished with " + str(counter) + " links.")
 else:
     print("No solution found.")
 
