@@ -7,49 +7,60 @@ class RRT:
     
     def generate_point(self, xMin, xMax, yMin, yMax, pointsList, delta): 
         #function to generate a random point on the plot, find the nearest plotted point, and create a new point in the direction of the random point
-        randomPoint = [random.randint(xMin, xMax), random.randint(yMin, yMax)]
-        minDist = 10000000
-        closestPoint = [0,0]
-        for point in pointsList:
-            dist = math.dist(point, randomPoint)  
-            if dist < minDist:
-                minDist = dist
-                closestPoint = point
+        goodPoint = False
+        while goodPoint == False:
+            randomPoint = [random.randint(xMin, xMax), random.randint(yMin, yMax)]
+            minDist = 10000000
+            closestPoint = [0,0]
+            for point in pointsList:
+                dist = math.dist(point, randomPoint)  
+                if dist < minDist:
+                    minDist = dist
+                    closestPoint = point
+            if minDist == 0:
+                goodPoint = False
+            else:
+                goodPoint = True
         a = delta / minDist
         newPoint = [closestPoint[0] + (a * (-closestPoint[0]+randomPoint[0])), closestPoint[1] + (a * (-closestPoint[1]+randomPoint[1]))]
         return [newPoint, closestPoint]
 
-    def obstacle_check(self, newPoint, closestPoint, obsList):
+    def obstacle_check(self, point1, point2, obsList):
         goodPoint = True
+        print("Checking: ")
         for obs in obsList:
-            slope = (-closestPoint[1]+newPoint[1])/(-closestPoint[0]+newPoint[0])
-            slopePerp = -(-closestPoint[0]+newPoint[0])/(-closestPoint[1]+newPoint[1])
-            yInt = closestPoint[1] - (slope * closestPoint[0])
+            try:
+                slope = (-point2[1]+point1[1])/(-point2[0]+point1[0])
+            except ZeroDivisionError as e:
+                print(point1)
+                print(point2)
+                slope = 2**32
+            try:
+                slopePerp = -(-point2[0]+point1[0])/(-point2[1]+point1[1])
+            except ZeroDivisionError as e:
+                print(point1)
+                print(point2)
+                slopePerp = 2**32
+            yInt = point2[1] - (slope * point2[0])
             yIntPerp = obs[1] - (slopePerp * obs[0])
-            intersect = [(yIntPerp-yInt)/(slope-slopePerp)]
+            try:
+               intersect = [(yIntPerp-yInt)/(slope-slopePerp)]
+            except ZeroDivisionError as e:
+                print(slope)
+                print(slopePerp)
+                intersect = [2**32]
             intersect.append(slope * intersect[0] + yInt)
             distInt = math.dist([obs[0], obs[1]], intersect)  
-            distNewPoint = math.dist([obs[0], obs[1]], newPoint)   
-            distClosestPoint = math.dist([obs[0], obs[1]], closestPoint)  
-            if (distInt <= obs[2]) and (max(abs(newPoint[0]), abs(closestPoint[0])) > abs(intersect[0]) > min(abs(newPoint[0]), abs(closestPoint[0]))):
+            distPoint1 = math.dist([obs[0], obs[1]], point1)   
+            distPoint2 = math.dist([obs[0], obs[1]], point2)  
+            print(str([obs[0], obs[1]]) + "    " + str(obs[2]) + "    " + str(distInt) + "    " + str(intersect) + "    " + str(slope) + "    " + str(slopePerp) + "    " + str(yInt) + "    " + str(yIntPerp))
+            if (distInt <= obs[2]) and (max(abs(point1[0]), abs(point2[0])) > abs(intersect[0]) > min(abs(point1[0]), abs(point2[0]))):
                 goodPoint = False
-            elif (distNewPoint <= obs[2]) or (distClosestPoint <= obs[2]) :
+                break
+            elif (distPoint1 <= obs[2]) or (distPoint2 <= obs[2]) :
                 goodPoint = False
-        return goodPoint
-
-    def check_complete(self, goal, newPoint, obsList): 
-        goodPoint = True
-        for obs in obsList:
-            slope = (goal[1]-newPoint[1])/(goal[0]-newPoint[0])
-            slopePerp = -(goal[0]-newPoint[0])/(goal[1]-newPoint[1])
-            yInt = goal[1] - (slope * goal[0])
-            yIntPerp = obs[1] - (slopePerp * obs[0])
-            intersect = [(yIntPerp-yInt)/(slope-slopePerp)]
-            intersect.append(slope * intersect[0] + yInt)
-            distInt = math.dist([obs[0], obs[1]], intersect)  
-            #print(str(obs[2]) + "    " + str(distInt) + "    " + str(intersect) + "    " + str(slope) + "    " + str(slopePerp) + "    " + str(yInt) + "    " + str(yIntPerp))
-            if (distInt <= obs[2]):
-                goodPoint = False
+                break
+        print(goodPoint)
         return goodPoint
     
     def check_point(self, point, obsList):
@@ -58,6 +69,6 @@ class RRT:
             dist = math.dist([obs[0], obs[1]], point)  
             if (dist <= obs[2]):
                 goodPoint = False
-            print(dist)
+                break
         return goodPoint
         
