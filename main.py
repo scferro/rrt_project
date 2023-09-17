@@ -1,15 +1,28 @@
 from tree import Tree
 from rrt import RRT
 import random
+import imageio.v3 as iio
 
-#set user defined variables
-xRange = [0, 200]
-yRange = [0, 200]
+# User defined options
+importImage = True
+randomObstacles = False
+randomStart = True
+randomGoal = True
+
+# User defined variables
+xRange = [0, 100] #set the size of the display area
+yRange = [0, 100] #set the size of the display area
+filepath = 'Documents/rrt_project/N_map.png' #filepath for image file
+
+
+# Other variables
 delta = 1
 numVert = 1000
-numObs = random.randint(5, 10)
-minRadius = 15
-maxRadius = 30
+numObs = random.randint(30, 50)
+minRadius = 3
+maxRadius = 12
+pixelSubGrid = 5
+
 
 checkValid = False
 
@@ -27,17 +40,27 @@ while checkValid == False:
     obsCount = 0
 
     #create obstacles
-    while obsCount < numObs:
-        tree.create_obstacle(maxRadius, minRadius)
-        obsCount += 1
+    if randomObstacles == True:
+        while obsCount < numObs:
+            tree.create_obstacle(maxRadius, minRadius)
+            obsCount += 1
+    if importImage == True:
+        im = iio.imread(filepath)
+        xStart = (xRange[1] - im.shape[1])/2
+        yStart = (yRange[1] + im.shape[0])/2 
+        tree.create_obs_from_image(im, yStart, xStart, pixelSubGrid)
     
-    #check that start and goal are not within an obstacle. create new obstacles and points if there is conflict
+    #check that start and goal are not within an obstacle and that there is not a direct path between them. create new obstacles and points if there is conflict
     obsList = tree.all_obstacles()
     checkValid = rrt.check_point(startPoint, obsList)
     if checkValid == True:
         checkValid = rrt.check_point(goal, obsList)
         if checkValid == True:
             checkValid = not rrt.obstacle_check(goal, startPoint, obsList)
+            if (checkValid == True) and (importImage == True):
+                checkValid = rrt.image_check(goal, im, xStart, yStart)
+                if (checkValid == True) and (importImage == True):
+                    checkValid = rrt.image_check(startPoint, im, xStart, yStart)
 
 #create points using RRT algo
 checkComplete = False
@@ -57,6 +80,8 @@ while (counter < numVert) and (checkComplete == False):
 if checkComplete == True:
     tree.add_link(newPoint, goal)
     print("Task accomploished with " + str(counter) + " links.")
+    tree.set_solved(True)
+    tree.find_solution()
 else:
     print("No solution found.")
 

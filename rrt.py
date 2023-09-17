@@ -27,7 +27,6 @@ class RRT:
 
     def obstacle_check(self, point1, point2, obsList):
         goodPoint = True
-        print("Checking: ")
         for obs in obsList:
             try:
                 slope = (-point2[1]+point1[1])/(-point2[0]+point1[0])
@@ -47,7 +46,7 @@ class RRT:
             distInt = math.dist([obs[0], obs[1]], intersect)  
             distPoint1 = math.dist([obs[0], obs[1]], point1)   
             distPoint2 = math.dist([obs[0], obs[1]], point2)  
-            print(str([obs[0], obs[1]]) + "    " + str(obs[2]) + "    " + str(distInt) + "    " + str(intersect) + "    " + str(slope) + "    " + str(slopePerp) + "    " + str(yInt) + "    " + str(yIntPerp))
+            #print(str([obs[0], obs[1]]) + "    " + str(obs[2]) + "    " + str(distInt) + "    " + str(intersect) + "    " + str(slope) + "    " + str(slopePerp) + "    " + str(yInt) + "    " + str(yIntPerp))
             if (distInt <= obs[2]) and (max(abs(point1[0]), abs(point2[0])) > abs(intersect[0]) > min(abs(point1[0]), abs(point2[0]))):
                 goodPoint = False
                 break
@@ -65,3 +64,16 @@ class RRT:
                 break
         return goodPoint
         
+    def image_check(self, point, im, xStart, yStart):
+        rows = im.shape[0]
+        columns = im.shape[1]
+        xPos = round(point[0] - xStart)
+        yPos = round(-point[1] + yStart)
+        if (point[0] >= xStart) and (point[0] <= xStart + columns) and (point[1] <= yStart) and (point[1] >= yStart - rows):
+            if im[yPos, xPos][0] == 0:
+                return False
+            else:
+                return True
+        else:
+            return True
+            
