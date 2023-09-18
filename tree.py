@@ -56,9 +56,13 @@ class Tree:
         self.links.append([point1, point2])
         #print("New link added. Total links: " + str(len(self.links)))
 
-    def create_obstacle(self, maxRadius, minRadius):
+    def create_obstacle_random(self, maxRadius, minRadius):
         #generate obstacles at random position with radius in specified range
         self.obstacles.append([random.randint(self.xMin, self.xMax), random.randint(self.yMin, self.yMax), random.randint(minRadius, maxRadius)])
+
+    def create_obstacle(self, xPos, yPos, radius):
+        #generate obstacles at random position with radius in specified range
+        self.obstacles.append([xPos, yPos, radius])
 
     def create_obs_from_image(self, im, yStart, xStart, pixelSubGrid):
         #creates obstacles using a binary image file. (xStart,yStart) indicates upper left corner of image on plot
@@ -123,7 +127,7 @@ class Tree:
         for pair in self.links:
             linkX = [pair[0][0], pair[1][0]]
             linkY = [pair[0][1], pair[1][1]]
-            ax.plot(linkX, linkY, 'r-.')
+            ax.plot(linkX, linkY, 'r-')
 
         #plot solution if solved
         if self.solved == True:
