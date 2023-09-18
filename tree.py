@@ -21,7 +21,16 @@ class Tree:
 
     def set_solved(self, solved):
         self.solved = solved
-        print("Puzzle solved.")
+        print("Puzzle solved!")
+
+    def change_goal_start(self, startPoint, goal):
+        self.startPoint = startPoint
+        self.goal = goal
+        self.obstacles = []
+        self.links = []
+        self.solved = False
+        self.solution = []
+        self.points = [startPoint]
 
     def find_solution(self):
         if self.solved == True:
@@ -45,6 +54,7 @@ class Tree:
     def add_link(self, point1, point2):
         #add pair of two points to the links list
         self.links.append([point1, point2])
+        #print("New link added. Total links: " + str(len(self.links)))
 
     def create_obstacle(self, maxRadius, minRadius):
         #generate obstacles at random position with radius in specified range

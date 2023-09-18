@@ -68,7 +68,11 @@ class RRT:
         rows = im.shape[0]
         columns = im.shape[1]
         xPos = round(point[0] - xStart)
+        if xPos > 99:
+            xPos = 99
         yPos = round(-point[1] + yStart)
+        if yPos > 99:
+            yPos = 99
         if (point[0] >= xStart) and (point[0] <= xStart + columns) and (point[1] <= yStart) and (point[1] >= yStart - rows):
             if im[yPos, xPos][0] == 0:
                 return False
