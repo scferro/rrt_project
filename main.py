@@ -11,9 +11,9 @@ delta = 1
 angleDelta = 1
 timeDelta = 0.1
 numVert = 2000
-numObs = random.randint(30, 50)
+numObs = random.randint(20, 30)
 minRadius = 3
-maxRadius = 12
+maxRadius = 10
 pixelSubGrid = 3
 
 # Intialize variables 
@@ -36,13 +36,13 @@ while checkImage == False:
         print("")
         startPoint = [0,0]
         goal = [0,0]
-        startPoint[0] = float(input("Enter start point X coordinate as an integer: "))
-        startPoint[1] = float(input("Enter start point Y coordinate as an integer: "))
-        goal[0] = float(input("Enter goal X coordinate as an integer: "))
-        goal[1] = float(input("Enter sgoal Y coordinate as an integer: "))
+        startPoint[0] = float(input("Enter start point X coordinate: "))
+        startPoint[1] = float(input("Enter start point Y coordinate: "))
+        goal[0] = float(input("Enter goal X coordinate: "))
+        goal[1] = float(input("Enter goal Y coordinate: "))
         print("")
     else:
-        print("Generating random start and goal.")
+        print("Generating random start and goal...")
         print("")
         startPoint = [random.randint(xRange[0], xRange[1]), random.randint(yRange[0], yRange[1])] 
         goal = [random.randint(xRange[0], xRange[1]), random.randint(yRange[0], yRange[1])]
@@ -176,13 +176,14 @@ while (counter < numVert) and (checkComplete == False):
     tree.add_link(closePoint, newPoint)
     checkComplete = rrt.obstacle_check(goal, newPoint, obsList)
     counter+= 1
+    print(counter)
 
 #if goal is accessible, add link to goal
 if checkComplete == True:
     tree.add_link(newPoint, goal)
     tree.set_solved(True)
     tree.find_solution()
-    print("Task accomploished using " + str(counter) + " links.")
+    print("Task accomplished using " + str(counter) + " links.")
     print("Generated solution plot. Correct path to the goal is shown in blue, incorrect paths are red.")
 else:
     print("No solution found.")

@@ -55,8 +55,7 @@ class RRT:
 
             intersect = self._find_intersect(slopeMod, closestPoint, randomPoint)
             
-            a = timeDelta
-            newPoint = [closestPoint[0] + (a * (-closestPoint[0]+intersect[0])), closestPoint[1] + (a * (-closestPoint[1]+intersect[1]))]
+            newPoint = [closestPoint[0] + (timeDelta * (-closestPoint[0]+intersect[0])), closestPoint[1] + (timeDelta * (-closestPoint[1]+intersect[1]))]
             obsCheck = self.obstacle_check(newPoint, closestPoint, obsList)
             if obsCheck == True:
                 obsCheck = self.image_check(newPoint, im, xStart, yStart)
@@ -67,8 +66,7 @@ class RRT:
 
                 intersect = self._find_intersect(slopeMod, closestPoint, randomPoint)
                 
-                a = timeDelta
-                newPoint = [closestPoint[0] + (a * (-closestPoint[0]+intersect[0])), closestPoint[1] + (a * (-closestPoint[1]+intersect[1]))]
+                newPoint = [closestPoint[0] + (timeDelta * (-closestPoint[0]+intersect[0])), closestPoint[1] + (timeDelta * (-closestPoint[1]+intersect[1]))]
                 obsCheck = self.obstacle_check(newPoint, closestPoint, obsList)
                 if obsCheck == True:
                     obsCheck = self.image_check(newPoint, im, xStart, yStart)
