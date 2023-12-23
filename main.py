@@ -11,12 +11,13 @@ delta = 1
 angleDelta = 1
 timeDelta = 0.1
 numVert = 2000
-numObs = random.randint(20, 30)
+numObs = random.randint(20, 40)
 minRadius = 3
-maxRadius = 10
+maxRadius = 12
 pixelSubGrid = 3
+buffer = 1
 
-# Intialize variables 
+# Initialize variables 
 checkValid = False
 checkImage = False
 counter = 0
@@ -79,7 +80,7 @@ while checkImage == False:
                 print("")
                 createCircles = bool(input('Manually enter data for circular obstacles? Enter anything here to enter data for obstacles or press [Enter] to skip: '))
                 if createCircles == True:
-                    print("Obstacles will be generated based on user inputs. You will need to exter [x,y] coordinates for the center and a radius length.")
+                    print("Obstacles will be generated based on user inputs. You will need to enter [x,y] coordinates for the center and a radius length.")
                 else:
                     print("Not generating obstacles based on user inputs.")
             print("")
@@ -115,13 +116,16 @@ while checkImage == False:
         #check that start and goal are not within an obstacle and that there is not a direct path between them. create new obstacles and points if there is conflict
         obsList = tree.all_obstacles()
         checkValid = rrt.check_point(startPoint, obsList)
+        print(checkValid)
         if checkValid == True:
             checkValid = rrt.check_point(goal, obsList)
+            print(checkValid)
             if checkValid == True:
                 if createCircles == False:
-                    checkValid = not rrt.obstacle_check(goal, startPoint, obsList) 
+                    checkValid = not rrt.obstacle_check(goal, startPoint, obsList, buffer) 
                 else:
                     checkValid = True
+                print(checkValid)
 
         if importImage == True:
             if checkValid == True:
@@ -154,7 +158,6 @@ while checkImage == False:
 
 print("Puzzle created successfully!")
 create_preview("run solver")
-solverCheck = bool(input("Simple Solver or Advanced Solver? Enter anything here to use the Simple Solver or press [Enter] to continue with the Advanced Solver (typically faster)."))
 
 #create points using RRT algo
 checkComplete = False
@@ -163,15 +166,8 @@ while (counter < numVert) and (checkComplete == False):
     obsList = tree.all_obstacles()
     validPoint = False
     while validPoint == False:
-        if solverCheck == False:
-            im = iio.imread(filepath)
-            xStart = (xRange[1] - im.shape[1])/2
-            yStart = (yRange[1] + im.shape[0])/2 
-            newPoint, closePoint = rrt.generate_point(xRange[0], xRange[1], yRange[0], yRange[1], pointsList, angleDelta, obsList, timeDelta, im, xStart, yStart)
-            validPoint = True 
-        else:
-            newPoint, closePoint = rrt.generate_point_simple(xRange[0], xRange[1], yRange[0], yRange[1], pointsList, delta)
-            validPoint = rrt.obstacle_check(newPoint, closePoint, obsList)
+        newPoint, closePoint = rrt.generate_point_simple(xRange[0], xRange[1], yRange[0], yRange[1], pointsList, delta)
+        validPoint = rrt.obstacle_check(newPoint, closePoint, obsList)
     tree.add_point(newPoint)
     tree.add_link(closePoint, newPoint)
     checkComplete = rrt.obstacle_check(goal, newPoint, obsList)

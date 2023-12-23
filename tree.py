@@ -114,7 +114,7 @@ class Tree:
 
     def plot_points(self): 
         #function to plot the points
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(8, 8))
         """ UNCOMMENT THIS TO PLOT INDIVIDUAL TREE POINTS, NOT JUST LINKS
         pointX = []
         pointY = []
@@ -148,4 +148,5 @@ class Tree:
         #set limits for plot display and display the plot
         ax.set_aspect( 1 )
         ax.set(xlim=(self.xMin, self.xMax), ylim=(self.yMin, self.yMax))
+        plt.subplots_adjust(left=0.1, right=0.9, bottom=0.1, top=0.9, wspace=0.1, hspace=0.1)
         plt.show()
