@@ -4,14 +4,16 @@
 The Rapidly-Exploring Random Tree (RRT) is a widely used algorithm in the field of robotics and motion planning. Introduced by Steven M. LaValle in 1998, RRT is designed to efficiently explore and navigate high-dimensional spaces, making it particularly suited for complex environments. The algorithm incrementally builds a tree structure by randomly sampling configuration points and connecting them to the existing tree through locally optimal paths. This approach allows RRT to quickly explore the configuration space, making it well-suited for real-time applications. RRT has been utilized in robotics for tasks such as motion and path planning, contributing to the improvement of autonomous robots' ability to navigate and make decisions in complex environments.
 
 ### Usage and Output
+To use the RRT algorithm, run 'main.py'. The program will prompt the user to enter all relevant configuration information.
+
 The start and goal locations can either be randomly generated or specified by the user. Similarly, circular obstacles can either be randomly generated or manually placed by entering coordinates for the center point and a radius of the obstacle. Below is an example of the algorithm being used on randomly generated obstacles. The start position is marked with an orange dot, the goal is marked with a blue dot, and the blue path indicates the path found from the start to the goal.
 
-<img src="scferro.github.io/assets/rrt_2.png"/>
+<img src="https://scferro.github.io/assets/rrt_2.png"/>
 
 
 Obstacles can also be specified using a binary image file. Black pixels are considered to be occupied by obstacles, while white pixels are considered empty. Circular obstacles are created to occupy any black pixels in the image, with a higher density of smaller obstacles used for any pixels that are border an empty white pixel. Below is the RRT navigating around the Northwestern "N". 
 
-<img src="scferro.github.io/assets/rrt_4.png"/>
+<img src="https://scferro.github.io/assets/rrt_4.png"/>
 
 <br>
 
